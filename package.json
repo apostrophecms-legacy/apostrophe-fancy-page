@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/punkave/apostrophe-fancy-page/issues"
   },
-  "homepage": "https://github.com/punkave/apostrophe-fancy-page"
+  "homepage": "https://github.com/punkave/apostrophe-fancy-page",
+  "dependencies": {
+    "extend": "~1.2.1",
+    "async": "~0.2.9",
+    "underscore": "~1.5.2"
+  }
 }

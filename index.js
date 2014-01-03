@@ -31,6 +31,7 @@ fancyPage.FancyPage = function(options, callback) {
   if (!self.label) {
     throw "You must set the label option when calling the FancyPage superclass constructor";
   }
+  self._typeCss = self._apos.cssName(self.name);
 
   // All partials generated via self.renderer can see these properties
   self._rendererGlobals = options.rendererGlobals || {};
@@ -192,7 +193,7 @@ fancyPage.FancyPage = function(options, callback) {
     };
 
     return async.series([ query, join, permalinker ], function(err) {
-      return mainCallback(err, results);
+      return callback(err, results);
     });
 
     function query(callback) {
@@ -212,7 +213,7 @@ fancyPage.FancyPage = function(options, callback) {
 
     function permalinker(callback) {
       _.each(results.pages, function(page) {
-        page.url = req.slug;
+        page.url = page.slug;
       });
       return callback(null);
     }
@@ -240,7 +241,6 @@ fancyPage.FancyPage = function(options, callback) {
   // automatically.
 
   self.loader = function(req, callback) {
-
     if (!options.greedy) {
       if (!req.page) {
         return callback(null);
@@ -261,7 +261,7 @@ fancyPage.FancyPage = function(options, callback) {
 
     function joins(callback) {
       var withJoins = options.withJoins;
-      return self._schemas.join(req, self.indexSchema, [ req.bestPage.typeSettings || {} ], null, callback);
+      return self._schemas.join(req, self.schema, [ req.bestPage.typeSettings || {} ], null, callback);
     }
 
     function dispatch(callback) {
@@ -322,14 +322,15 @@ fancyPage.FancyPage = function(options, callback) {
     name: self.name,
     label: self.label,
     action: self._action,
-    schema: self.schema
+    schema: self.schema,
+    typeCss: self._typeCss
   };
   extend(true, args, browser.options || {});
 
   // Synthesize a constructor for this type on the browser side if there
   // isn't one. This allows trivial subclassing of snippets for cases where
   // no custom browser side code is actually needed
-  self._apos.pushGlobalCallWhen('user', 'AposSnippets.subclassIfNeeded(?, ?, ?)', getBrowserConstructor(), getBaseBrowserConstructor(), args);
+  self._apos.pushGlobalCallWhen('user', 'AposFancyPage.subclassIfNeeded(?, ?, ?)', getBrowserConstructor(), getBaseBrowserConstructor(), args);
   self._apos.pushGlobalCallWhen('user', '@.replaceType(?, new @(?))', pages, self.name, construct, args);
 
   function getBrowserConstructor() {
@@ -351,4 +352,3 @@ fancyPage.FancyPage = function(options, callback) {
   }
 };
 
-fancyPage.widget = widget;
