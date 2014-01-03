@@ -108,7 +108,7 @@ And the URL is:
 
     /xyzcorp/foobar
 
-And there is no other page at /xyzcorp/foobar, then the user will get a 404 Not FOund error.
+And there is no other page at /xyzcorp/foobar, then the user will get a 404 Not Found error.
 
 You can change this behavior. If you set `greedy: true` when configuring your module, then if no other page matches more exactly and the URL begins with `/xyzcorp/`, your page will still appear.
 
