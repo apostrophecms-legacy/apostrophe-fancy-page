@@ -29,6 +29,7 @@ So let's subclass `apostrophe-fancy-page`:
 modules: {
   // Other modules go here
   company: {
+    extend: 'apostrophe-fancy-page',
     name: 'company',
     label: 'Company',
     addFields: [
