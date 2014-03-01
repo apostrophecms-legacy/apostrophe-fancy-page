@@ -19,7 +19,6 @@ function AposFancyPage(options) {
       });
     },
     unserialize: function(data, $el, $details, callback) {
-      console.log($details[0]);
       return aposSchemas.populateFields($details, self.schema, data, callback);
     }
   };

@@ -47,7 +47,7 @@ fancyPage.FancyPage = function(options, callback) {
   };
 
 
-  // self.schema = extra fields in typeSettings
+  // self.schema = extra fields
   self.schema = self._schemas.compose(options);
 
   // SEARCH AND VERSIONING SUPPORT
@@ -208,7 +208,7 @@ fancyPage.FancyPage = function(options, callback) {
 
     function join(callback) {
       var withJoins = options.withJoins;
-      return self._schemas.join(req, self.schema, _.pluck(results.pages, 'typeSettings'), withJoins, callback);
+      return self._schemas.join(req, self.schema, results.pages, withJoins, callback);
     }
 
     function permalinker(callback) {
@@ -261,7 +261,7 @@ fancyPage.FancyPage = function(options, callback) {
 
     function joins(callback) {
       var withJoins = options.withJoins;
-      return self._schemas.join(req, self.schema, [ req.bestPage.typeSettings || {} ], null, callback);
+      return self._schemas.join(req, self.schema, [ req.bestPage ], null, callback);
     }
 
     function dispatch(callback) {

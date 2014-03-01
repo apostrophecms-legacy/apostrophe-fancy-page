@@ -21,7 +21,7 @@ Let's say we already have a page type called "Company," set up with the rest of 
   ]
 ```
 
-This is fine but we want to know the year each company as incorporated.
+This is fine but we want to know the year each company was incorporated.
 
 So let's subclass `apostrophe-fancy-page`:
 
