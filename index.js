@@ -133,9 +133,6 @@ fancyPage.FancyPage = function(options, callback) {
 
   // END OF MANAGER FUNCTIONALITY
 
-  // Add static routes that serve assets for this module and all of its ancestors
-  self.serveAssets();
-
   // Returns pages of this type that the current user is permitted to visit.
   //
   // Normally viewers reach these by browsing, however in some cases
