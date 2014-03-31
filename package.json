@@ -24,6 +24,6 @@
   "dependencies": {
     "extend": "~1.2.1",
     "async": "~0.2.9",
-    "underscore": "~1.5.2"
+    "lodash": "2.4.x"
   }
 }
