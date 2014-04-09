@@ -118,3 +118,18 @@ In your dispatcher, you can access the rest of the URL (the part after `/xyzcorp
 ## Passing Extra Information to Templates
 
 You can pass extra information to the page template by adding it as properties of the `req.extras` object. Any properties of that object are automatically visible to Nunjucks when the page is rendered.
+
+## When Two Fancy Pages Share A Module
+
+Sometimes you might find it convenient for two fancy pages to share the same module. After all, nothing stops you from constructing two objects that subclass fancy pages inside a single module's constructor function. However, there's a catch: they would both render the same `pageSettings.html` and load the same `editor.js` and `content.js`.
+
+You can address this by passing these options to the fancy pages constructor:
+
+```
+  pageSettingsTemplate: 'indexPageSettings',
+  editorScript: 'indexEditor',
+  contentScript: 'indexContent'
+```
+
+The forthcoming `apostrophe-blog-2` module relies on this approach and can be referred to as a reference on this technique.
+

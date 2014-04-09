@@ -106,7 +106,7 @@ fancyPage.FancyPage = function(options, callback) {
     // browser-side UI assets for managing fancy pages
 
     // CUSTOM PAGE SETTINGS TEMPLATE
-    self.pushAsset('template', 'pageSettings', {
+    self.pushAsset('template', options.pageSettingsTemplate || 'pageSettings', {
       when: 'user',
       data: {
         fields: self.schema,
@@ -119,6 +119,17 @@ fancyPage.FancyPage = function(options, callback) {
 
     self.pushAsset('script', 'editor', { when: 'user' });
     self.pushAsset('script', 'content', { when: 'always' });
+
+    // Modules that subclass fancy page more than once may wish to
+    // push alternate editor and content javascript for the front end.
+    // We push these in addition to, not instead of, the usual
+    // base versions above so that they can subclass successfully
+    if (options.editorScript && (options.editorScript !== 'editor')) {
+      self.pushAsset('script', options.editorScript, { when: 'user' });
+    }
+    if (options.contentScript && (options.contentScript !== 'content')) {
+      self.pushAsset('script', options.contentScript, { when: 'always' });
+    }
 
     // We've decided not to push stylesheets that live in the core
     // Apostrophe modules, because we prefer to write LESS files in the
@@ -233,6 +244,47 @@ fancyPage.FancyPage = function(options, callback) {
     });
   };
 
+  /**
+   * Store a page of this type. By default this just wraps apos.putPage.
+   * All parameters are required. This method is called when the user
+   * saves page settings for a page of this type or creates a new page
+   * of this type. Note that empty beforePutOne and afterPutOne methods are
+   * provided for your overriding convenience. Keep in mind
+   * that in most cases adding fields to the schema is easier.
+   */
+  self.putOne = function(req, slug, options, page, callback) {
+    if (!page.type) {
+      page.type = self.name;
+    }
+    return async.series({
+      beforePutOne: function(callback) {
+        return self.beforePutOne(req, slug, options, page, callback);
+      },
+      putPage: function(callback) {
+        return self._apos.putPage(req, slug, options, page, callback);
+      },
+      afterPutOne: function(callback) {
+        return self.afterPutOne(req, slug, options, page, callback);
+      }
+    }, callback);
+  };
+
+  /**
+   * Automatically invoked before putOne() proceeds. Empty by default
+   * for your overriding convenience.
+   */
+  self.beforePutOne = function(req, slug, options, page, callback) {
+    return callback(null);
+  };
+
+  /**
+   * Automatically invoked after putOne() updates the page. Empty by default
+   * for your overriding convenience.
+   */
+  self.afterPutOne = function(req, slug, options, page, callback) {
+    return callback(null);
+  };
+
   // This is a loader function, for use with the `load` option of
   // the pages module's `serve` method. apostrophe-sites wires it up
   // automatically.
@@ -275,7 +327,6 @@ fancyPage.FancyPage = function(options, callback) {
   // behavior, see commented-out examples below.
 
   self.dispatch = function(req, callback) {
-
     // Now we know it's of the right type.
 
     // If I want to, I can override this to render via
@@ -308,12 +359,13 @@ fancyPage.FancyPage = function(options, callback) {
     }
   });
 
-  // BROWSER-SIDE SETUP FOR THE PAGE TYPE
+  // SETUP FOR THE PAGE TYPE
 
   var browser = options.browser || {};
   self._browser = browser;
   var pages = browser.pages || 'aposPages';
   var construct = getBrowserConstructor();
+
   self._pages.addType(self);
   var args = {
     name: self.name,
