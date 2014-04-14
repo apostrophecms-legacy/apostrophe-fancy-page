@@ -4,10 +4,10 @@ function AposFancyPage(options) {
   var self = this;
 
   // These are all provided via pushGlobalCallWhen in apostrophe-fancy-page/index.js
-  self._instance = options.instance;
   self._action = options.action;
   self.schema = options.schema;
   self._typeCss = options.typeCss;
+  self.orphan = options.orphan;
 
   // PAGE SETTINGS FOR THIS TYPE
 

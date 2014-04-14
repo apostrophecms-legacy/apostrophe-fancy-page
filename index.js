@@ -19,6 +19,10 @@ fancyPage.FancyPage = function(options, callback) {
   self._options = options;
   self._schemas = options.schemas;
 
+  // If set to true this type of page is always an "orphan"
+  // (hidden from conventional navigation menus, but accessible)
+  self.orphan = options.orphan;
+
   // Mix in the ability to serve assets and templates
   self._apos.mixinModuleAssets(self, 'fancyPage', __dirname, options);
 
@@ -306,6 +310,12 @@ fancyPage.FancyPage = function(options, callback) {
       return callback(null);
     }
 
+    // Provide a custom context menu for this page type if specified
+    // and editable
+    if (self._options.contextMenu && req.bestPage._edit) {
+      req.contextMenu = self._options.contextMenu;
+    }
+
     async.series([joins, dispatch], callback);
 
     function joins(callback) {
@@ -359,20 +369,24 @@ fancyPage.FancyPage = function(options, callback) {
     }
   });
 
-  // SETUP FOR THE PAGE TYPE
+  // Get ready to push information about this page type to the browser
 
   var browser = options.browser || {};
   self._browser = browser;
   var pages = browser.pages || 'aposPages';
   var construct = getBrowserConstructor();
 
+  // Register this page type on the server
   self._pages.addType(self);
+
+  // Data for the browser
   var args = {
     name: self.name,
     label: self.label,
     action: self._action,
     schema: self.schema,
-    typeCss: self._typeCss
+    typeCss: self._typeCss,
+    orphan: self.orphan
   };
   extend(true, args, browser.options || {});
 

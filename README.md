@@ -3,7 +3,7 @@
 This module lets you add custom properties to "regular pages" on your [Apostrophe](http://github.com/punkave/apostrophe-sandbox) CMS site. With this module, a page can have subpages and yet also have custom properties in the page settings dialog, including "joins" with other page types and snippet types, without writing extra JavaScript code.
 
 **Table of Contents**
-* [Adding Custom Properites](#adding-custom-properties)
+* [Adding Custom Properties](#adding-custom-properties)
 * [Adding Joins](#adding-joins)
 * [Custom Rendering](#custom-rendering)
 * [Greedy Pages](#greedy-pages)
@@ -37,7 +37,7 @@ modules: {
         name: 'incorporated',
         label: 'Incorporated',
         type: 'integer'
-      }
+      }w
     ]
   }
 }
