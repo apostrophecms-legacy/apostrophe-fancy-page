@@ -35,6 +35,8 @@ fancyPage.FancyPage = function(options, callback) {
   if (!self.label) {
     throw "You must set the label option when calling the FancyPage superclass constructor";
   }
+  self.pluralLabel = options.pluralLabel || (self.label + 's');
+
   self._typeCss = self._apos.cssName(self.name);
 
   // All partials generated via self.renderer can see these properties
