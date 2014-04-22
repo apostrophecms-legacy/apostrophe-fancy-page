@@ -233,7 +233,8 @@ fancyPage.FancyPage = function(options, callback) {
     }
   };
 
-  // Get just one page. Otherwise identical to get.
+  // Get just one page. Otherwise identical to get. Invokes get,
+  // so you only need to override one.
 
   self.getOne = function(req, criteria, optionsArg, callback) {
     var options = {};
@@ -363,10 +364,11 @@ fancyPage.FancyPage = function(options, callback) {
   // Sanitize newly submitted page settings (never trust a browser)
   extend(true, self, {
     settings: {
-      sanitize: function(data, callback) {
+      sanitize: function(req, data, callback) {
         var ok = {};
-        self._schemas.convertFields(self.schema, 'form', data, ok);
-        return callback(null, ok);
+        return self._schemas.convertFields(req, self.schema, 'form', data, ok, function(err) {
+          return callback(err, ok);
+        });
       }
     }
   });
