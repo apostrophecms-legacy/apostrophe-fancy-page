@@ -258,16 +258,50 @@ fancyPage.FancyPage = function(options, callback) {
    * of this type. Note that empty beforePutOne and afterPutOne methods are
    * provided for your overriding convenience. Keep in mind
    * that in most cases adding fields to the schema is easier.
+   *
+   * If you are creating a new page, you must pass in the parent page object
+   * via options.parent. If you pass "undefined" as the "slug" argument
+   * a slug is generated for you based on the title and the slug of
+   * the parent page (recommended). Never attempt to define the _id property
+   * when storing a new page, allow putOne to determine one for you.
    */
+
   self.putOne = function(req, slug, options, page, callback) {
-    if (!page.type) {
-      page.type = self.name;
-    }
+    page.type = self.name;
     return async.series({
       beforePutOne: function(callback) {
         return self.beforePutOne(req, slug, options, page, callback);
       },
-      putPage: function(callback) {
+      newPage: function(callback) {
+        // If this is an existing page, or the developer has already
+        // set the rank property (and presumably level and path),
+        // we butt out and don't look at options.parent
+        if (page._id || page.rank) {
+          return callback(null);
+        }
+        if (!options.parent) {
+          return callback('You must specify the parent page via the parent option when calling putOne for a new fancy page.');
+        }
+        var slug = slug || page.slug || options.parent.slug + '/' + self._apos.slugify(page.title);
+        if (!page.slug) {
+          page.slug = slug;
+        }
+        if (!page.path) {
+          page.path = options.parent.path + '/' + self._apos.slugify(page.title);
+        }
+        page.level = options.parent.level + 1;
+        if (page.rank !== undefined) {
+          return callback(null);
+        }
+        return self._pages.getNextRank(options.parent, function(err, rank) {
+          if (err) {
+            return callback(err);
+          }
+          page.rank = rank;
+          return callback(null);
+        });
+      },
+      putOne: function(callback) {
         return self._apos.putPage(req, slug, options, page, callback);
       },
       afterPutOne: function(callback) {
