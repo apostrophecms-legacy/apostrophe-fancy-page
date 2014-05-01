@@ -269,9 +269,6 @@ fancyPage.FancyPage = function(options, callback) {
   self.putOne = function(req, slug, options, page, callback) {
     page.type = self.name;
     return async.series({
-      beforePutOne: function(callback) {
-        return self.beforePutOne(req, slug, options, page, callback);
-      },
       newPage: function(callback) {
         // If this is an existing page, or the developer has already
         // set the rank property (and presumably level and path),
@@ -300,6 +297,9 @@ fancyPage.FancyPage = function(options, callback) {
           page.rank = rank;
           return callback(null);
         });
+      },
+      beforePutOne: function(callback) {
+        return self.beforePutOne(req, slug, options, page, callback);
       },
       putOne: function(callback) {
         return self._apos.putPage(req, slug, options, page, callback);
