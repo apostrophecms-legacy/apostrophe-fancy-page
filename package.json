@@ -23,7 +23,7 @@
   "homepage": "https://github.com/punkave/apostrophe-fancy-page",
   "dependencies": {
     "extend": "~1.2.1",
-    "async": "~0.2.9",
+    "async": "0.8.x",
     "lodash": "2.4.x"
   }
 }
