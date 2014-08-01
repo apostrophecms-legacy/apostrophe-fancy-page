@@ -221,11 +221,21 @@ fancyPage.FancyPage = function(options, callback) {
     }
 
     function join(callback) {
+      // Watch out for the getDistinct option which delivers an array
+      // and isn't interested in joins
+      if (Array.isArray(results)) {
+        return setImmediate(callback);
+      }
       var withJoins = options.withJoins;
       return self._schemas.join(req, self.schema, results.pages, withJoins, callback);
     }
 
     function permalinker(callback) {
+      // Watch out for the getDistinct option which delivers an array
+      // and isn't interested in permalinks
+      if (Array.isArray(results)) {
+        return setImmediate(callback);
+      }
       _.each(results.pages, function(page) {
         page.url = page.slug;
       });
