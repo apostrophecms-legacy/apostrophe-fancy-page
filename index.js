@@ -237,7 +237,7 @@ fancyPage.FancyPage = function(options, callback) {
         return setImmediate(callback);
       }
       _.each(results.pages, function(page) {
-        page.url = page.slug;
+        page.url = apos.prefix + page.slug;
       });
       return callback(null);
     }
