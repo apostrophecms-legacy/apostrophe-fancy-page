@@ -434,7 +434,9 @@ fancyPage.FancyPage = function(options, callback) {
     action: self._action,
     schema: self.schema,
     typeCss: self._typeCss,
-    orphan: self.orphan
+    orphan: self.orphan,
+    childTypes: self._options.childTypes,
+    descendantTypes: self._options.descendantTypes
   };
   extend(true, args, browser.options || {});
 

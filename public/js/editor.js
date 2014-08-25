@@ -8,6 +8,8 @@ function AposFancyPage(options) {
   self.schema = options.schema;
   self._typeCss = options.typeCss;
   self.orphan = options.orphan;
+  self.childTypes = options.childTypes;
+  self.descendantTypes = options.descendantTypes;
 
   // PAGE SETTINGS FOR THIS TYPE
 
