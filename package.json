@@ -1,6 +1,6 @@
 {
   "name": "apostrophe-fancy-page",
-  "version": "0.5.14",
+  "version": "0.5.15",
   "description": "A superclass for modules that enhance \"regular pages\" in the Apostrophe CMS with custom page settings, loader functions, dispatcher, etc.",
   "main": "index.js",
   "scripts": {
