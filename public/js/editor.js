@@ -16,13 +16,38 @@ function AposFancyPage(options) {
   self.settings = {
     serialize: function($el, $details, callback) {
       var data = {};
-      return aposSchemas.convertFields($details, self.schema, data, function(err) {
+      return async.series({
+        convert: function(callback) {
+          return aposSchemas.convertFields($details, self.schema, data, callback);
+        },
+        customValidate: function(callback) {
+          return self.validate($el, $details, data, $el.data('new') ? 'insert' : 'update', callback);
+        }
+      }, function(err) {
         return callback(err, data);
       });
     },
     unserialize: function(data, $el, $details, callback) {
       return aposSchemas.populateFields($details, self.schema, data, callback);
     }
+  };
+
+  // This is a hook to do your own custom validation outside
+  // of schemas.
+  //
+  // $el is the entire page settings modal. $details is the
+  // div where your page-type-specific settings live.
+  // data is a page object already populated by 'convertFields'
+  // at this point. action is either "insert" or "update".
+  //
+  // If you are unsatisfied, invoke the callback with an
+  // error, otherwise with null.
+  //
+  // We have a strong bias toward sanitizing the user's input
+  // rather than rejecting it, but sometimes you must.
+
+  self.validate = function($el, $details, data, action, callback) {
+    return apos.afterYield(callback);
   };
 }
 

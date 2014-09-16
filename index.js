@@ -443,8 +443,7 @@ fancyPage.FancyPage = function(options, callback) {
   // Synthesize a constructor for this type on the browser side if there
   // isn't one. This allows trivial subclassing of snippets for cases where
   // no custom browser side code is actually needed
-  self._apos.pushGlobalCallWhen('user', 'AposFancyPage.subclassIfNeeded(?, ?, ?)', getBrowserConstructor(), getBaseBrowserConstructor(), args);
-  self._apos.pushGlobalCallWhen('user', '@.replaceType(?, new @(?))', pages, self.name, construct, args);
+  self._apos.pushGlobalCallWhen('user', 'apos.afterYield(?, function() { AposFancyPage.subclassIfNeeded(?, ?, ?); @.replaceType(?, new @(?)) })', browser.afterYield, getBrowserConstructor(), getBaseBrowserConstructor(), args, pages, self.name, construct, args);
 
   function getBrowserConstructor() {
     return self._browser.construct || 'Apos' + self.name.charAt(0).toUpperCase() + self.name.substr(1);
