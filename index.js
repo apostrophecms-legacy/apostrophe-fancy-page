@@ -19,6 +19,9 @@ fancyPage.FancyPage = function(options, callback) {
   self._options = options;
   self._schemas = options.schemas;
 
+  self.childTypes = options.childTypes;
+  self.descendantTypes = options.descendantTypes;
+
   // If set to true this type of page is always an "orphan"
   // (hidden from conventional navigation menus, but accessible)
   self.orphan = options.orphan;
