@@ -28,6 +28,8 @@ function AposFancyPage(options) {
       });
     },
     unserialize: function(data, $el, $details, callback) {
+      var instance = aposSchemas.newInstance(self.schema);
+      _.defaults(data, instance);
       return aposSchemas.populateFields($details, self.schema, data, callback);
     }
   };
